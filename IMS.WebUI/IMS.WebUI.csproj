@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Components\Controls\**" />
+    <Compile Remove="Components\Pages\Inventories\**" />
+    <Content Remove="Components\Controls\**" />
+    <Content Remove="Components\Pages\Inventories\**" />
+    <EmbeddedResource Remove="Components\Controls\**" />
+    <EmbeddedResource Remove="Components\Pages\Inventories\**" />
+    <None Remove="Components\Controls\**" />
+    <None Remove="Components\Pages\Inventories\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Components\Layout\Identity\AuthenticationLayout.razor" />
+    <Content Remove="Components\Pages\Identity\_Imports.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Components\Layout\Identity\AuthenticationLayout.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="MudBlazor" Version="6.19.1" />
+    <PackageReference Include="NetcodeHub.Packages.Components.BreadCrumb" Version="1.0.0" />
+    <PackageReference Include="NetcodeHub.Packages.Components.DataGrid" Version="1.0.1" />
+    <PackageReference Include="NetcodeHub.Packages.Components.FileUpload" Version="1.0.8" />
+    <PackageReference Include="NetcodeHub.Packages.Components.Modal" Version="1.0.1" />
+    <PackageReference Include="NetcodeHub.Packages.Components.Toast" Version="1.0.5" />
+    <PackageReference Include="NetcodeHub.Packages.Components.Validations" Version="1.0.1" />
+    <PackageReference Include="NetcodeHub.Packages.UI.Templates.Breeze" Version="1.1.4" />
+    <PackageReference Include="Syncfusion.Blazor.Charts" Version="28.2.9" />
+    <PackageReference Include="Syncfusion.Blazor.Grid" Version="28.2.9" />
+    <PackageReference Include="Syncfusion.Blazor.Navigations" Version="28.2.9" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="28.2.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IMS.Application\IMS.Application.csproj" />
+    <ProjectReference Include="..\IMS.Domain\IMS.Domain.csproj" />
+    <ProjectReference Include="..\IMS.Infrastructure\IMS.Infrastructure.EntityFramework\IMS.Infrastructure.EntityFramework.csproj" />
+
+  </ItemGroup>
+
+</Project>

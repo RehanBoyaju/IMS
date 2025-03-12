@@ -1,0 +1,14 @@
+﻿@using IMS.Application.Service
+@using Microsoft.AspNetCore.Authorization
+@using IMS.WebUI.Components.Layout.Identity
+@layout AuthenticationLayout
+@attribute [AllowAnonymous]
+@inject IAccountService accountService
+@using System.ComponentModel.DataAnnotations
+@using IMS.Application.DTO.Request.Identity
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+
+
+

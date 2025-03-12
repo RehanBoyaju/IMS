@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Inventories\**" />
+    <Compile Remove="PluginInterfaces\**" />
+    <EmbeddedResource Remove="Inventories\**" />
+    <EmbeddedResource Remove="PluginInterfaces\**" />
+    <None Remove="Inventories\**" />
+    <None Remove="PluginInterfaces\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="IViewInventoriesByNameUseCase.cs" />
+    <Compile Remove="ViewInventoriesByNameUseCase.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="9.0.2" />
+    <PackageReference Include="NetcodeHub.Packages.Extensions.Attributes.RequiredGuid" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IMS.Domain\IMS.Domain.csproj" />
+    
+  </ItemGroup>
+
+</Project>
