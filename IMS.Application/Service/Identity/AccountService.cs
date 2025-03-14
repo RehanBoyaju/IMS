@@ -12,11 +12,10 @@ using System.Security.Claims;
 using IMS.Application.DTO.Response.Identity;
 
 using IMS.Application.Interface.Identity;
-using IMS.Application.Service;
 using IMS.Application.DTO.Request.ActivityTracker;
 using IMS.Application.DTO.Response.ActivityTracker;
 
-namespace IMS.Application.Service
+namespace IMS.Application.Service.Identity
 {
     public class AccountService : IAccountService
     {

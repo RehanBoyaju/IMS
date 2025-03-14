@@ -1,5 +1,6 @@
 ﻿using IMS.Application.Interface.Identity;
 using IMS.Application.Service;
+using IMS.Application.Service.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

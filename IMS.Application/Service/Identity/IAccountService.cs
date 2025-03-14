@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using IMS.Application.DTO.Request.ActivityTracker;
 using IMS.Application.DTO.Response.ActivityTracker;
 
-namespace IMS.Application.Service
+namespace IMS.Application.Service.Identity
 {
     public interface IAccountService
     {
