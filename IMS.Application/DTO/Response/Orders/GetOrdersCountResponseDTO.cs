@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace IMS.Application.DTO.Response.Orders
 {
-    public record GetOrdersCountResponseDTO (int Processing , int Delivering, int Canceled);
+    public record GetOrdersCountResponseDTO (int Processing , int Delivering,int Delivered, int Canceled);
 }

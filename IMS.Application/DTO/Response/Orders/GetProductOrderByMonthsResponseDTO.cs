@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IMS.Application.DTO.Response.Orders
 {
-    public class GetProductOrderByMonthsResponseDTO
+    public class GetProductOrderByMonthsResponseDTO 
     {
         public string MonthName { get; set; }
         public decimal TotalAmount { get; set; }

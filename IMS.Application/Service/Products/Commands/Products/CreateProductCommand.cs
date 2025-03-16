@@ -9,6 +9,6 @@ using System.Threading.Tasks;
 
 namespace IMS.Application.Service.Products.Commands.Products
 {
-    public record CreateProductCommand(AddProductRequestDTO ProductModal):IRequest<ServiceResponse>;
- 
+    public record CreateProductCommand(AddProductRequestDTO ProductModel):IRequest<ServiceResponse>;
+    
 }

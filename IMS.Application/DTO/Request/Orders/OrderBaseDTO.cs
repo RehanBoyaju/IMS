@@ -13,6 +13,8 @@ namespace IMS.Application.DTO.Request.Orders
         [NetcodeHubRequiredGuid(ErrorMessage = "Product must be selected")]
         public Guid ProductId { get; set; }
         [Required]
+        public string ProductName { get; set; }
+        [Required]
         [Range(1, int.MaxValue)]
         public int Quantity { get; set; }
     }

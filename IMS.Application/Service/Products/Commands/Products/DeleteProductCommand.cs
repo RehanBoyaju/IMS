@@ -8,6 +8,6 @@ using System.Threading.Tasks;
 
 namespace IMS.Application.Service.Products.Commands.Products
 {
-    public record DeleteProductCommand(Guid id) : IRequest<ServiceResponse>;
+    public record DeleteProductCommand(Guid Id) : IRequest<ServiceResponse>;
 
 }

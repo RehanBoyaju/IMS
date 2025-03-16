@@ -12,6 +12,7 @@ using IMS.Application.Extension.Identity;
 using System.Runtime.CompilerServices;
 using IMS.Application.Interface.Identity;
 using IMS.Infrastructure.EntityFramework.Repository;
+using IMS.Infrastructure.EntityFramework.Repository.Products.Handlers.Products;
 
 namespace IMS.Infrastructure.EntityFramework.DependencyInjection
 {
@@ -43,7 +44,8 @@ namespace IMS.Infrastructure.EntityFramework.DependencyInjection
                 });
             services.AddCascadingAuthenticationState();
             services.AddScoped<IAccount, Account>();
-            
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(CreateProductHandler).Assembly));//any
+            services.AddScoped<Data.IDbContextFactory<AppDbContext>, DbContextFactory<AppDbContext>>();
             return services;
         }
     }

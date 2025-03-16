@@ -13,6 +13,8 @@ namespace IMS.Application.DTO.Response.Products
         [Required]
         [Display(Name = "Serial Number")]
         public string SerialNumber { get; set; }
+        [Required]
+        public string Name { get; set; }
 
         [NetcodeHubRequiredGuid(ErrorMessage = "Product Location is Required")]
         public Guid LocationId { get; set; }

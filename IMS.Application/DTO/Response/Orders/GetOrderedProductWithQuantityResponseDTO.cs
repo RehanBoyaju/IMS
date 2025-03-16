@@ -9,6 +9,6 @@ namespace IMS.Application.DTO.Response.Orders
     public class GetOrderedProductWithQuantityResponseDTO
     {
         public string ProductName { get; set; }
-        public string QuanitityOrdered { get; set; }
+        public int QuanitityOrdered { get; set; }
     }
 }
