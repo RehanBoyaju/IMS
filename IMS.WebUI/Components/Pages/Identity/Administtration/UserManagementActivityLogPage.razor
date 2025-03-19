@@ -1,0 +1,98 @@
+﻿@using IMS.Application.DTO.Response.ActivityTracker
+@using Microsoft.AspNetCore.Authorization
+@using MudBlazor
+@attribute [Authorize(Policy = "AdministrationPolicy")]
+@page "/administration/account/user-management-activity-log"
+@implements IDisposable
+@rendermode InteractiveServer
+<PageTitle>Activity Logger</PageTitle>
+<ThreeSectionsTemplate>
+    <Col9Template>
+        <AdminHomeHeader></AdminHomeHeader>
+        <NetcodeHubBreadCrumb BreadCrumbs="BreadCrumbs" ReloadPageOnClick=true BackgroundColor="@BreadCrumbBackgroundColor.PrimarySubtle()"/>
+            <div class="row mt-2">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        @if (Activities != null)
+                        {
+                            foreach(var group in Activities)
+                            {
+                                <MudBlazor.MudTreeView T="string" Dense=true Hover=true>
+                                    <MudBlazor.MudTreeViewItem Icon="@Icons.Material.Filled.Event" Value="@group.Key.ToString("dd-MMMM-yyyy")" Class="text-warning">
+                                        @foreach(var item in group)
+                                        {
+                                            <MudBlazor.MudTreeViewItem Icon="@Icons.Material.Filled.VerifiedUser" Value="@($"Operation Title :{item.Title}")" Class="text-success">
+                                                <MudBlazor.MudTreeViewItem Icon="@Icons.Material.Filled.EventNote" Value="@($"Operation Description :{item.Description}")" Class="text-dark"></MudBlazor.MudTreeViewItem>
+                                                <MudBlazor.MudDivider/>
+                                                <MudBlazor.MudTreeViewItem Icon="@Icons.Material.Filled.SupervisorAccount" Value="@($" Executed By:{item.UserName}")"Class="text-warning"></MudBlazor.MudTreeViewItem>
+                                                <MudBlazor.MudTreeViewItem Icon="@Icons.Material.Filled.MarkChatRead" Value="@($"Success State :{item.OperationState}")" Class="text-primary"></MudBlazor.MudTreeViewItem>
+
+                                            </MudBlazor.MudTreeViewItem>
+                                        }
+                                    </MudBlazor.MudTreeViewItem>
+                                </MudBlazor.MudTreeView>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+    </Col9Template>
+    <Col3Template>
+        <Banner/>
+    </Col3Template>
+</ThreeSectionsTemplate>
+@code {
+    private ClaimsPrincipal? User;
+    private Dictionary<string, string?> BreadCrumbs = new Dictionary<string, string?>
+    {
+        {"Home","app/home"},
+        {"Activity Logs",null}
+    };
+    private HubConnection? hubConnection;
+    private IEnumerable<IGrouping<DateTime, ActivityTrackerResponseDTO>> Activities = [];
+    private async Task GetActivities() => Activities = await accountService.GroupActivityAsync();
+
+    protected async override Task OnInitializedAsync()
+    {
+        User = (await AuthStateProvider.GetAuthenticationStateAsync()).User;
+        if (!customAuthorizationService.CustomClaimChecker(User, DefaultClaims.ManageUser)){
+            NavigationManager.NavigateTo("Account/access-denied");
+        }
+        homeGenericState.StateChanged += StateButtonClicked;
+        await GetActivities();
+        hubConnection = hubConnectionService.GetHubConnection();
+        hubConnection.On<string>("Notify", async (clientId) =>
+        {
+            await CallWhenNotified();
+        });
+        if(hubConnection == null)
+        {
+            await hubConnection!.StartAsync();
+        }
+
+       
+
+    }
+    async Task CallWhenNotified()
+    {
+        await InvokeAsync(async () =>
+        {
+            StateHasChanged();
+            await adminState.GetActiveOrdersCount();
+        });
+    }
+
+    //Navigate to order pages when state buttons are clicked
+    void StateButtonClicked()
+    {
+        string adminOrderUrl = "administration/products/orders";
+        if (homeGenericState.IsAdmin)
+        {
+            NavigationManager.NavigateTo($"{adminOrderUrl}/{homeGenericState.StateName}");
+        }
+    }
+    public void Dispose()
+    {
+        homeGenericState.StateChanged -= StateButtonClicked;
+    }
+}

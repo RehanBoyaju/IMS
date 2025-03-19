@@ -1,0 +1,143 @@
+﻿
+@* <input type="checkbox" title="Navigation menu" class="navbar-toggler" /> *@
+
+@* <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()"> *@
+<div class="nav-scrollable">
+    <nav class="flex-column ">
+        <div class="top-row ps-3 pt-3 navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="">IMS</a>
+            </div>
+        </div>
+        <AuthorizeView>
+
+            <div class="nav-item  px-3 ">
+                <NavLink class="nav-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                    </svg>
+                    <span class="profile-name" style="color:white">Hello @Name</span>
+                </NavLink>
+            </div>
+
+
+        </AuthorizeView>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <!-- Example split danger button -->
+
+
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="weather">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+            </NavLink>
+        </div>
+
+        <AuthorizeView Policy="AdministrationPolicy">
+            @if (CanManageUser)
+            {
+                <div class="nav-item ps-1 px-3">
+                    <div class="btn-group ps-0 nav-link  mt-2">
+                        <button type="button" class="btn ps-0 btn-sm " style="color:white;"><i class="bi bi-person-gear"></i>User Management</button>
+                        <button type="button" class="btn btn-sm dropdown-toggle dropdown-toggle-split " data-bs-toggle="dropdown" aria-expanded="false" style="color:white">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="administration/account/create-user">Add User</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="administration/account/users/manage">Manage User</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="administration/account/user-management-activity-log">Activity Log</a></li>
+
+                        </ul>
+                    </div>
+                </div>  
+
+            }
+            <div class="nav-item ps-1 px-3">
+                <div class="btn-group ps-0 nav-link  mt-2">
+                    <button type="button" class="btn btn-sm ps-0" style="color:white;"><i class="bi bi-mailbox"></i>Item Management</button>
+
+                    <button type="button" class="btn btn-sm dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="color:white">
+                        <span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="products/manage">Products</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="products/category/manage">Categories</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="products/locations/manage">Locations</a></li>
+
+                    </ul>
+                </div>
+            </div>
+
+            @* Admin Orders *@
+
+            <div class="nav-item ps-3 px-3">
+                <NavLink class="nav-link fw-bold d-flex gap-1" role="button" href="administration/products/orders">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
+                        <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
+                    </svg>
+                    Orders
+                </NavLink>
+            </div>
+
+        </AuthorizeView>
+        <AuthorizeView Policy="@Policy.UserPolicy">
+            @* Client Orders *@
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="products/orders">
+                    <i class="mdi mdi-cube-unfolded menu-icon"></i>
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> My Orders
+                </NavLink>
+            </div>
+
+        </AuthorizeView>
+
+        <AuthorizeView>
+            <div class="nav-item px-3">
+                <form action="Account/Logout" method="post" class="mb-2">
+
+                    <button type="submit" class="nav-link fw-bold d-flex ">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z" />
+                            <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z" />
+                        </svg>Logout
+                    </button>
+
+                </form>
+            </div>
+        </AuthorizeView>
+    </nav>
+
+</div>
+
+
+@code {
+    private string? Name;
+    public bool CanManageUser = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var state = await AuthStateProvider.GetAuthenticationStateAsync();
+
+            var user = state.User;
+            if (user.Identity!.IsAuthenticated)
+            {
+                Name = user.Claims.FirstOrDefault(_ => _.Type == "Name")!.Value;
+                CanManageUser = customAuthorizationService.CustomClaimChecker(state.User, DefaultClaims.ManageUser);
+
+            }
+        }
+        catch { }
+    }
+}
+

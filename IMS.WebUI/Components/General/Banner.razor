@@ -1,0 +1,212 @@
+﻿@using MediatR
+@inject IServiceProvider serviceProvider
+<AuthorizeView Policy="AdministrationPolicy">
+    <div class="row">
+        <div class="col-xl-12 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
+            <div class="card bg-warning">
+                <div class="card-body px-3 py-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="color-card">
+                            <p class="mb-0 color-card-head">Ordered Products</p>
+                            <h2 class="text-white">
+                                @AdminTotalAmountOfOrderedProduct.ToString("#,##0.00")
+                            </h2>
+                        </div>
+                        <i class="card-icon-indicator mdi mdi-basket bg-inverse-icon-warning"></i>
+                    </div>
+                    <h6 class="text-white">Gross Products Ordered</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
+            <div class="card bg-danger">
+                <div class="card-body px-3 py-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="color-card">
+                            <p class="mb-0 color-card-head">Only Today</p>
+                            <h2 class="text-white">
+                                $ @AdminOnlyTodayOrderedProduct.ToString("#,##0.00");
+                            </h2>
+                        </div>
+                        <i class="card-icon-indicator mdi mdi-cube-outline bg-inverse-icon-danger"></i>
+                    </div>
+                    <h6 class="text-white">@(AdminTodayOrdersPercentage.ToString("0.##") + "%") of gross orders only today</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
+            <div class="card bg-primary">
+                <div class="card-body px-3 py-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="color-card">
+                            <p class="mb-0 color-card-head">Last Month</p>
+                            <h2 class="text-white">
+                                $ @AdminTotalAmountOfProductOrderedForLastMonth.ToString("#,##0.00");
+                            </h2>
+                        </div>
+                        <i class="card-icon-indicator mdi mdi-briefcase-outline bg-inverse-icon-primary"></i>
+                    </div>
+                    <h6 class="text-white">@(AdminLastMonthProductOrderedPercentageOverall.ToString("0.##") + "%") Since last month</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
+            <div class="card bg-success">
+                <div class="card-body px-3 py-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="color-card">
+                            <p class="mb-0 color-card-head">Gross Product Quantities Ordered</p>
+                            <h2 class="text-white">
+                                $ @AdminGrossProductQuantitiesOrdered.ToString("#,##0.00");
+                            </h2>
+                        </div>
+                        <i class="card-icon-indicator mdi mdi-account-circle bg-inverse-icon-success"></i>
+                    </div>
+                    <h6 class="text-white">@(AdminTodayProductQuantitiesOrdered.ToString("0.##") + "%") Only Today</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</AuthorizeView>
+
+
+<AuthorizeView Policy="@Policy.UserPolicy">
+    <div class="row">
+        <div class="col-xl-12 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
+            <div class="card bg-warning">
+                <div class="card-body px-3 py-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="color-card">
+                            <p class="mb-0 color-card-head">Ordered Products</p>
+                            <h2 class="text-white">
+                                @ClientTotalAmountOfOrderedProduct.ToString("#,##0.00")
+                            </h2>
+                        </div>
+                        <i class="card-icon-indicator mdi mdi-basket bg-inverse-icon-warning"></i>
+                    </div>
+                    <h6 class="text-white">Gross Products Ordered</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
+            <div class="card bg-danger">
+                <div class="card-body px-3 py-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="color-card">
+                            <p class="mb-0 color-card-head">Only Today</p>
+                            <h2 class="text-white">
+                                $ @ClientOnlyTodayOrderedProduct.ToString("#,##0.00");
+                            </h2>
+                        </div>
+                        <i class="card-icon-indicator mdi mdi-cube-outline bg-inverse-icon-danger"></i>
+                    </div>
+                    <h6 class="text-white">@(ClientTodayOrdersPercentage.ToString("0.##") + "%") of gross orders only today</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
+            <div class="card bg-primary">
+                <div class="card-body px-3 py-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="color-card">
+                            <p class="mb-0 color-card-head">Last Month</p>
+                            <h2 class="text-white">
+                                $ @ClientTotalAmountOfProductOrderedForLastMonth.ToString("#,##0.00");
+                            </h2>
+                        </div>
+                        <i class="card-icon-indicator mdi mdi-briefcase-outline bg-inverse-icon-primary"></i>
+                    </div>
+                    <h6 class="text-white">@(ClientLastMonthProductOrderedPercentageOverall.ToString("0.##") + "%") Since last month</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
+            <div class="card bg-success">
+                <div class="card-body px-3 py-4">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="color-card">
+                            <p class="mb-0 color-card-head">Gross Product Quantities Ordered</p>
+                            <h2 class="text-white">
+                                $ @ClientGrossProductQuantitiesOrdered.ToString("#,##0.00");
+                            </h2>
+                        </div>
+                        <i class="card-icon-indicator mdi mdi-account-circle bg-inverse-icon-success"></i>
+                    </div>
+                    <h6 class="text-white">@(ClientTodayProductQuantitiesOrdered.ToString("0.##") + "%") Only Today</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</AuthorizeView>
+@code {
+    private IEnumerable<GetOrderResponseDTO> UserOrders = [];
+    private IEnumerable<GetOrderResponseDTO> AdminOrders = [];
+    ClaimsPrincipal? User;
+    private decimal ClientTotalAmountOfOrderedProduct;
+    private decimal ClientOnlyTodayOrderedProduct;
+    private decimal ClientTodayOrdersPercentage;
+    private int ClientGrossProductQuantitiesOrdered;
+    private int ClientTodayProductQuantitiesOrdered;
+    private decimal ClientTotalAmountOfProductOrderedForLastMonth;
+    private decimal ClientLastMonthProductOrderedPercentageOverall;
+
+    private decimal AdminTotalAmountOfOrderedProduct;
+    private decimal AdminOnlyTodayOrderedProduct;
+    private decimal AdminTodayOrdersPercentage;
+    private int AdminGrossProductQuantitiesOrdered;
+    private int AdminTodayProductQuantitiesOrdered;
+    private decimal AdminTotalAmountOfProductOrderedForLastMonth;
+    private decimal AdminLastMonthProductOrderedPercentageOverall;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadDefaults();
+    }
+    private async Task LoadDefaults()
+    {
+        try
+        {
+            User = (await AuthStateProvider.GetAuthenticationStateAsync()).User;
+            if (User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Role)!.Value.Equals("User", StringComparison.OrdinalIgnoreCase))
+            {
+                string userId = User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.NameIdentifier)!.Value;
+                using var scope = serviceProvider.CreateScope();
+                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                UserOrders = (await mediator.Send(new GetOrderByIdQuery(userId)));
+                GetClientSections();
+            }
+            else if (User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Role)!.Value.Equals("Admin", StringComparison.OrdinalIgnoreCase))
+            {
+                using var scope = serviceProvider.CreateScope();
+                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                AdminOrders = (await mediator.Send(new GetAllOrderQuery()));
+                GetAdminSections();
+            }
+        }
+        catch { }
+
+    }
+    void GetClientSections()
+    {
+        ClientTotalAmountOfOrderedProduct = UserOrders.Sum(_ => _.TotalAmount);
+        ClientOnlyTodayOrderedProduct = UserOrders.Where(_ => _.OrderedDate.Date == DateTime.Today.Date).Sum(_ => _.TotalAmount);
+        ClientTodayOrdersPercentage = (ClientOnlyTodayOrderedProduct / ClientTotalAmountOfOrderedProduct) * 100;
+        ClientGrossProductQuantitiesOrdered = UserOrders.Sum(_ => _.Quantity);
+        ClientTodayProductQuantitiesOrdered = UserOrders.Where(_ => _.OrderedDate.Date == DateTime.Today.Date).Sum(_ => _.Quantity);
+        ClientTotalAmountOfProductOrderedForLastMonth = UserOrders.Where(_ => _.OrderedDate.Date.AddMonths(-1) < DateTime.Today.AddMonths(0)).Sum(_ => _.TotalAmount);
+        ClientLastMonthProductOrderedPercentageOverall = (ClientTotalAmountOfProductOrderedForLastMonth / ClientTotalAmountOfOrderedProduct) * 100;
+
+    }
+    void GetAdminSections()
+    {
+
+        AdminTotalAmountOfOrderedProduct = AdminOrders.Sum(_ => _.TotalAmount);
+        AdminOnlyTodayOrderedProduct = AdminOrders.Where(_ => _.OrderedDate.Date == DateTime.Today.Date).Sum(_ => _.TotalAmount);
+        AdminTodayOrdersPercentage = (AdminOnlyTodayOrderedProduct / AdminTotalAmountOfOrderedProduct) * 100;
+        AdminGrossProductQuantitiesOrdered = AdminOrders.Sum(_ => _.Quantity);
+        AdminTodayProductQuantitiesOrdered = AdminOrders.Where(_ => _.OrderedDate.Date == DateTime.Today.Date).Sum(_ => _.Quantity);
+        AdminTotalAmountOfProductOrderedForLastMonth = AdminOrders.Where(_ => _.OrderedDate.Date.AddMonths(-1) < DateTime.Today.AddMonths(0)).Sum(_ => _.TotalAmount);
+        AdminLastMonthProductOrderedPercentageOverall = (AdminTotalAmountOfProductOrderedForLastMonth / AdminTotalAmountOfOrderedProduct) * 100;
+    }
+}
