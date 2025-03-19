@@ -1,0 +1,7 @@
+﻿.skeleton-item {
+    flex: 0 1 calc(33.33% - 10px); /* 3 items per row with spacing */
+    margin-bottom: 15px; /* Adds space between rows */
+    display: flex;
+    justify-content: center;
+}
+

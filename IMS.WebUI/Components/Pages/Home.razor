@@ -4,15 +4,12 @@
 @implements IDisposable
 
 <PageTitle>Home</PageTitle>
-
-<AuthorizeView Policy="AdministrationPolicy">
-    <AdminHomeHeader/>
-</AuthorizeView>
-<AuthorizeView Policy="@Policy.UserPolicy">
-    <ClientHomeHeader/>
-</AuthorizeView>
-
-Welcome to your new app.
+<ThreeSectionsTemplate>
+    <Col9Template>
+        <HomePageGraph></HomePageGraph>
+    </Col9Template>
+    <Col3Template><Banner/></Col3Template>
+</ThreeSectionsTemplate>
 @code {
     private HubConnection? hubConnection;
 

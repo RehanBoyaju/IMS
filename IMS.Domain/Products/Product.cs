@@ -9,9 +9,9 @@ namespace IMS.Domain.Products
 {
     public class Product : ProductBase
     {
-        public Category Category { get; set; } = null;
+        public Category Category { get; set; }
         public Guid CategoryId { get; set; }
-        public Location Location { get; set; } = null;
+        public Location Location { get; set; }
         public Guid LocationId { get; set; }
 
         [DataType(DataType.Currency)]

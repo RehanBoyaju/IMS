@@ -10,6 +10,6 @@ namespace IMS.Application.Service.Products.Queries.Products
 {
     public class GetProductByIdQuery(Guid Id) : IRequest<GetProductResponseDTO>
     {
-        public Guid Id { get; } = Id;
+        public Guid Id { get; set; } = Id;
     }
 }

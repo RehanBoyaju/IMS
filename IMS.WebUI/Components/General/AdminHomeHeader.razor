@@ -1,7 +1,9 @@
 ﻿@rendermode InteractiveServer
 @implements IDisposable
+@attribute [Authorize(Policy = "AdministrationPolicy")]
 
-<div class="page-header flex-wrap" style="margin-top:0rem">
+
+<div class="page-header flex-wrap pt-5" >
     <h3 class="mb-0">
         Hi,Welcome Back! <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block"> Your system analytics dashbaord:</span>
     </h3>
