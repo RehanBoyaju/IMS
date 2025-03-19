@@ -130,7 +130,7 @@ namespace IMS.Infrastructure.EntityFramework.Migrations
                     b.Property<DateTime>("DateOrdered")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DeliveredDate")
+                    b.Property<DateTime>("DeliveringDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OrderState")

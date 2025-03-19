@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Content Remove="Components\Layout\Identity\AuthenticationLayout.razor" />
+    <Content Remove="Components\Layout\Sidebar\Content.razor" />
     <Content Remove="Components\Pages\Identity\_Imports.razor" />
   </ItemGroup>
 
@@ -54,6 +55,12 @@
     <ProjectReference Include="..\IMS.Domain\IMS.Domain.csproj" />
     <ProjectReference Include="..\IMS.Infrastructure\IMS.Infrastructure.EntityFramework\IMS.Infrastructure.EntityFramework.csproj" />
 
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Products\Category\" />
+    <Folder Include="Components\Products\Location\" />
+    <Folder Include="Components\Products\Orders\" />
   </ItemGroup>
 
 </Project>

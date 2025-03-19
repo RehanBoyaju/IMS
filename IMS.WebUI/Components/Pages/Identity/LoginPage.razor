@@ -1,46 +1,45 @@
 ﻿@page "/Account/Login"
-
-
 @layout MainLayout
-<h3>LoginPage</h3>
+
 @inject NavigationManager navigationManager
-<EditForm Model="loginModel" OnValidSubmit="LoginAsync" FormName="Login" Enhance>
-    <div class="card-border-primary shadow-lg text-dark p-5" style="border-radius:20%; min-width:25vw;max-width:25vw">
-        <div class="card-header text-dark fs-4 border-primary">Login</div>
-        <div class="card-body" style="opacity:1">
-            <DataAnnotationsValidator></DataAnnotationsValidator>
-            <div class="form-floating mb-3">
-                <InputText id="email" @bind-Value="loginModel.Email" class="form-control" autocomplete="username" aria-required="true" ></InputText>
-                <label for="email" class="form-label">EmailAddress</label>
-                <ValidationMessage For="()=>loginModel.Email"></ValidationMessage>
+<div class="d-flex " style="margin-left:20vw; margin-top:10vh">
 
-            </div>
-            <div class="form-floating mb-3">
-                <InputText id="password" @bind-Value="loginModel.Password" class="form-control" autocomplete="password" aria-required="true"></InputText>
-                <label for="password" class="form-label">Password</label>
-                <ValidationMessage For="()=>loginModel.Password"></ValidationMessage>
-            </div>
-            <div class=form-group align-content-end">
-                <button class="float-end btn btn-success mt-4 w-50" type="submit">Log in</button>
-            </div>
-            <hr class="text-primary"/>
-        </div>
-        <div class="card-footer mt-5">
 
-            @if(ErrorMessage != "")
+    <EditForm Model="loginModel" OnValidSubmit="LoginAsync" FormName="Login" Enhance>
+       
+        <div class="card-border-primary shadow-lg text-dark p-5" style="border-radius:20%; min-width:25vw;max-width:50vw">
+
+            <ValidationSummary class="form-control text-danger text-decoration-none"></ValidationSummary>
+            @if (ErrorMessage != "")
             {
                 <div class="alert alert-danger">
                     @ErrorMessage
                 </div>
             }
-            else
-            {
-                <ValidationSummary class="form-control text-danger text-decoration-none"></ValidationSummary>
 
-            }
+            <div class="card-header text-dark fs-4 border-primary mb-3">Log in</div>
+            <div class="card-body" style="opacity:1">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <div class="form-floating mb-3">
+                    <InputText id="email" @bind-Value="loginModel.Email" class="form-control" autocomplete="username" aria-required="true"></InputText>
+                    <label for="email" class="form-label">EmailAddress</label>
+                    <ValidationMessage For="()=>loginModel.Email"></ValidationMessage>
+
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText type="password" id="password" @bind-Value="loginModel.Password" class="form-control" autocomplete="password" aria-required="true"></InputText>
+                    <label for="password" class="form-label">Password</label>
+                    <ValidationMessage For="()=>loginModel.Password"></ValidationMessage>
+                </div>
+                <div class="form-group d-flex justify-content-center">
+                    <button class="float-end btn btn-success mt-4 w-50" type="submit">Log in</button>
+                </div>
+                <hr class="text-primary" />
+            </div>
+           
         </div>
-    </div>
-</EditForm>
+    </EditForm>
+</div>
 @code {
 
     string ErrorMessage = "";

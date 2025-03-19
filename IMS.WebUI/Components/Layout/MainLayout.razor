@@ -1,20 +1,32 @@
-﻿@inherits LayoutComponentBase
+﻿@using IMS.WebUI.Components.Layout.Sidebar
+
+@inherits LayoutComponentBase
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        @*<SidebarTemplate>
+            <SidebarContentTemplate><Content/></SidebarContentTemplate>
+        </SidebarTemplate>*@
+        <NavMenu></NavMenu>
     </div>
 
-    <main>
+    <main >
         <div class="top-row px-4">
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
 
-        <article class="content px-4">
+        <article class="content px-4 flex-grow-1">
             @Body
+
         </article>
+        <Footer />
+
     </main>
+
 </div>
+
+
+
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.

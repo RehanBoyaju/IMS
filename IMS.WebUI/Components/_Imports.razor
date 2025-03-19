@@ -1,5 +1,6 @@
 ﻿@using System.Net.Http
 @using System.Net.Http.Json
+@using IMS.WebUI.Components.Layout.Identity
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
@@ -18,3 +19,53 @@
 @inject NavigationManager NavigationManager
 @inject IAccountService AccountService
 @inject AuthenticationStateProvider AuthStateProvider
+
+
+@using NetcodeHub.Packages.Components
+@using Application.DTO.Request.Products
+@using Application.DTO.Response.Products
+@using NetcodeHub.Packages.Extensions.LocalStorage
+@using NetcodeHub.Packages.UI.Templates.Breeze
+
+
+@using Mapster
+@using NetcodeHub.Packages.Components.BreadCrumb
+@using NetcodeHub.Packages.Components.Modal
+@using NetcodeHub.Packages.Components.Toast
+@using Syncfusion.Blazor.Navigations
+@using IMS.Application.DTO.Response
+@using NetcodeHub.Packages.Components.DataGrid
+@using NetcodeHub.Packages.Components.FileUpload
+@using Syncfusion.Blazor.Grids
+@using IMS.Application.DTO.Request.Orders
+@using System.Security.Claims
+
+@using IMS.Application.Extension
+@using IMS.Application.Service.Orders
+@using IMS.Application.Service.Orders.Queries
+@using IMS.Application.DTO.Request.ActivityTracker
+@using IMS.Application.Service.Products.Commands.Products
+@using IMS.Application.Service.Products.Queries.Categories
+@using IMS.Application.Service.Products.Queries.Locations
+@using Microsoft.AspNetCore.SignalR.Client
+@using Application.DTO.Response.Orders
+@using Application.Service.Orders.Commands
+@using Application.Service.Products.Commands.Locations
+@using Application.Service.Products.Commands.Categories
+@using Syncfusion.Blazor.Notifications
+@inject ChangePasswordState passwordState
+@using IMS.WebUI.Hubs
+@using IMS.WebUI.States
+@using IMS.WebUI.States.Administration
+@using IMS.WebUI.States.User
+@using IMS.WebUI.Components.General
+
+@inject HubConnectionService hubConnectionService
+@inject IAccountService accountService
+@inject IServiceProvider serviceProvider
+@inject IJSRuntime JS
+@inject GenericHomeHeaderState homeGenericState
+@inject UserActiveOrderCountState userState
+@inject AdminActiveOrderCountState adminState
+@inject ICustomAuthorizationService customAuthorizationService 
+@inject ILocalStorageService localStorageService
