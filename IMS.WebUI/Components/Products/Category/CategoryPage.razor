@@ -1,0 +1,291 @@
+﻿@page "/products/category/manage"
+@using MediatR
+@rendermode InteractiveServer
+@attribute [Authorize(Policy = "AdministrationPolicy")]
+@implements IDisposable
+<PageTitle>Categories</PageTitle>
+<ThreeSectionsTemplate>
+    <Col9Template>
+        <NetcodeHubBreadCrumb BreadCrumbs="BreadCrumbs" BackgroundColor="@BackgroundColor.Secondary()" DeactivatedColor="@BreadCrumbBackgroundColor.Secondary()" ActivatedColor="@BreadCrumbColor.Danger()"></NetcodeHubBreadCrumb>
+        <div class="row bg-danger py-2 mt-3" style="border-radius:20px">
+            <div class="col-lg-12 col-sm-12 col-md-12">
+                <div class="card border-1 shadow-lg table-responsive mb-2" style="border-radius:20px">
+                    <div class="card-header p-2">
+                        <button class="btn btn-outline-danger float-end" @onclick="CreateCategoryBtnClicked">
+                            <i class="mdi mdi-plus"></i> Create Category
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <NetcodeHubDataGrid ContentBGColor="@Color.Primary()" HeaderFont="@Font.TimesNewRoman()" HeaderSize="@Size.Large()" ContentFont="@Font.Georgia()" DataGridFormat="@DataGridFormat.Striped()" HeaderBGColor="@Color.Danger()">
+                            <HeaderTemplate>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th><span id="manageHeader" style="display:none;">MANAGE</span></th>
+                                </tr>
+                            </HeaderTemplate>
+                            <ContentTemplate>
+                                @if (Categories == null)
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center mb-2"><span>No data found</span></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    var listData = Categories.Skip(SkipValue).Take(TakeValue).ToList();
+
+                                    @foreach (var item in listData)
+                                    {
+                                        string id = item.Id.ToString();
+                                        <tr @onmouseover="()=> ToggleIcons(id,true)" @onmouseout="()=> ToggleIcons(id,false)" id="td_@item.Id">
+                                            
+
+                                            <td id="td1_@item.Id">@item.Id</td>
+                                            <td id="td2_@item.Id">@item.Name</td>
+
+                                            <td>
+
+                                                <i @onmouseover="()=>ToggleEditIcon(id,true)" @onmouseout="()=>ToggleIcons(id,false)" id="editIcon_@item.Id" @onclick="()=> EditClicked(item)" class="mdi mdi-grease-pencil text-info cursorStyle" style="display:none"></i>
+                                                @if (CanDelete)
+                                                {
+                                                    <i id="separatorIcon_@item.Id" class="modal-dialog mdi-dots-vertical text-primary" style="display:none"></i>
+                                                    <i @onmouseover="()=> ToggleDeleteIcon(id,true)" @onmouseout="() => ToggleDeleteIcon(id,false)" @onclick="()=> DeleteClicked(item)" id="deleteIcon_@item.Id" class="mdi mdi-delete text-secondary" style="display:none"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i id="separatorIcon_@item.Id" class="modal-dialog mdi-dots-vertical text-primary" style="display:none"></i>
+                                                    <i @onmouseover="()=> ToggleDeleteIcon(id,true)" @onmouseout="() => ToggleDeleteIcon(id,false)" id="deleteIcon_@item.Id" class="mdi mdi-delete text-secondary" style="display:none"></i>
+
+                                                }
+                                            </td>
+
+                                        </tr>
+
+
+                                    }
+                                }
+                                @if (Loading)
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center mb-2">
+                                            <div class="spinner-border text-primary" role="status" style="z-index:99">
+                                                <span class="visually-hidden">Processing...</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </ContentTemplate>
+                        </NetcodeHubDataGrid>
+                    </div>
+                    <div class="card-footer">
+                        <SfPager @ref="@Page" PageSize="10" NumericItemsCount="4" TotalItemsCount="Categories.Count()" ItemClick="Click"></SfPager>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </Col9Template>
+    <Col3Template><Banner></Banner></Col3Template>
+</ThreeSectionsTemplate>
+<NetcodeHubConfirmation Action="Confirm" BootstrapClass="bg-danger shadow-lg border-1 card-header" @ref="confirmation" ConfirmationContent="Are you sure you want to delete?"></NetcodeHubConfirmation>
+<NetcodeHubToast @ref="ToastComponent" />
+<NetcodeHubModal @bind-Open="IsOpen" BootstrapClass="border-danger rounded p-2 ml-2" CustomStyle="position:relative; left:40vw;right:40vw;top:30vh">
+    <ContentTemplate>
+        <div class="card-border-1 shadow-sm">
+            <div class="card-header">
+                <span class="text-center text-danger fw-bold">@ModalTitle</span>
+                <i class="mdi mdi-close text-danger fw-bold float-end fs-4 cursorStyle" @onclick="CloseModal"></i>
+            </div>
+            <div class="card-body">
+                <EditForm Model="CategoryModel" OnValidSubmit="SaveCategory">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <NetcodeHub.Packages.Components.Validations.OnInput.FloatingText Label="Category Name" @bind-Value="CategoryModel.Name" class="form-control"></NetcodeHub.Packages.Components.Validations.OnInput.FloatingText>
+                    </div>
+                    <div class="form-group mt-3 mb-3">
+                        @if (Loading)
+                        {
+                            <GenericSpinnerButton ButtonClass="btn btn-danger float-end" Text="Saving.."></GenericSpinnerButton>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-danger float-end">Save</button>
+                        }
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </ContentTemplate>
+</NetcodeHubModal>
+@code {
+    public bool IsOpen { get; set; } = false;
+    private ClaimsPrincipal? User;
+    private Dictionary<string, string?> BreadCrumbs = new Dictionary<string, string?>
+    {
+        {"Home","app/home"},
+        {"Manage Categories",null}
+    };
+    public string ModalTitle = "Create New Category";
+    SfPager? Page;
+    NetcodeHubToast? ToastComponent;
+    public bool Loading { get; set; } = false;
+    NetcodeHubConfirmation? confirmation;
+    public int SkipValue;
+    public int TakeValue = 10;
+    private IEnumerable<GetCategoryResponseDTO> Categories { get; set; } = [];
+    private IEnumerable<GetProductResponseDTO> Products { get; set; } = [];
+    private AddCategoryRequestDTO CategoryModel { get; set; } = new();
+    private HubConnection? hubConnection;
+    private bool CanDelete = false;
+    protected override async Task OnInitializedAsync()
+    {
+        User = (await AuthStateProvider.GetAuthenticationStateAsync()).User;
+        CanDelete = customAuthorizationService.CustomClaimChecker(User, DefaultClaims.Delete);
+        homeGenericState.StateChanged += StateButtonClicked;
+        await GetCategories();
+        hubConnection = hubConnectionService.GetHubConnection();
+        hubConnection.On<string>("Notify", async (clientId) =>
+        {
+            await CallWhenNotified();
+        });
+        if (hubConnection == null)
+        {
+            await hubConnection.StartAsync();
+        }
+    }
+    private async Task CallWhenNotified()
+    {
+        await InvokeAsync(async () =>
+        {
+            StateHasChanged();
+            await adminState.GetActiveOrdersCount();
+        });
+    }
+    void StateButtonClicked()
+    {
+        string adminOrderUrl = "administration/products/orders";
+
+        if (homeGenericState.IsAdmin)
+        {
+            NavigationManager.NavigateTo($"{adminOrderUrl}/{homeGenericState.StateName}");
+        }
+
+    }
+    private async Task GetCategories()
+    {
+        Loading = true;
+        using var scope = serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        Categories = await mediator.Send(new GetAllCategoriesQuery());
+        Loading = false;
+    }
+    private async Task ToggleIcons(string itemId = null!, bool isHovering = false) => await JS.InvokeVoidAsync("ToggleIcons", itemId, isHovering);
+    private async Task ToggleEditIcon(string itemId = null!, bool isHovering = false) => await JS.InvokeVoidAsync("ToggleEditIcon", itemId, isHovering);
+    private async Task ToggleDeleteIcon(string itemId = null!, bool isHovering = false) => await JS.InvokeVoidAsync("ToggleDeleteIcon", itemId, isHovering);
+
+
+    void OpenModal()=> IsOpen = true;
+    void CloseModal() => IsOpen = false;
+
+    void CreateCategoryBtnClicked()
+    {
+        ModalTitle = "CreateNewCategory";
+        OpenModal();
+    }
+    async Task SaveCategory()
+    {
+        Loading = true;
+        ServiceResponse response = new(false, null);
+        if(IdHolder != Guid.Empty)
+        {
+            var update = CategoryModel.Adapt(new UpdateCategoryRequestDTO());
+            using var scope = serviceProvider.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            update.Id = IdHolder;
+            response = await mediator.Send(new UpdateCategoryCommand(update));
+            await accountService.SaveActivityAsync(new ActivityTrackerRequestDTO()
+                {
+                    UserId = User!.Claims.FirstOrDefault(u => u.Type == ClaimTypes.NameIdentifier)!.Value.ToString(),
+                    Title = "Update Category Method called",
+                    Description = response.Message,
+                    OperationState = response.Flag,
+                    Date=DateTime.Now.Date
+                });
+        }
+        else
+        {
+            using var scope = serviceProvider.CreateScope();
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            response = await mediator.Send(new CreateCategoryCommand(CategoryModel));
+            await accountService.SaveActivityAsync(new ActivityTrackerRequestDTO()
+                {
+                    UserId = User!.Claims.FirstOrDefault(u => u.Type == ClaimTypes.NameIdentifier)!.Value.ToString(),
+                    Title = "Create Category Method called",
+                    Description = response.Message,
+                    OperationState = response.Flag,
+                    Date = DateTime.Now.Date
+                });
+        }
+        if (response.Flag)
+        {
+            await GetCategories();
+            await ToastComponent!.ShowSuccessToast("Info", response.Message);
+            CategoryModel = new();
+            CloseModal();
+        }
+        else
+        {
+            await ToastComponent!.ShowErrorToast("Info", response.Message);
+        }
+        Loading = false;
+    }
+    public void Click(PagerItemClickEventArgs e)
+    {
+        SkipValue = e.CurrentPage * Page!.PageSize - Page.PageSize;
+        TakeValue = Page.PageSize;
+    }
+    public Guid IdHolder { get; set; } = Guid.Empty;
+    void EditClicked(GetCategoryResponseDTO category)
+    {
+        ModalTitle = "Update Category";
+        IdHolder = category.Id;
+        category.Adapt(CategoryModel);
+        OpenModal();
+    }
+    void DeleteClicked(GetCategoryResponseDTO category)
+    {
+        IdHolder = category.Id;
+        category.Adapt(CategoryModel);
+        confirmation!.OpenConfirmation();
+    }
+
+    async Task Confirm()
+    {
+        Loading = true;
+        using var scope = serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var response = await mediator.Send(new DeleteCategoryCommand(IdHolder));
+        await accountService.SaveActivityAsync(new ActivityTrackerRequestDTO()
+            {
+                UserId = User!.Claims.FirstOrDefault(u => u.Type == ClaimTypes.NameIdentifier)!.Value.ToString(),
+                Title = "Delete Category Method called",
+                Description = response.Message,
+                OperationState = response.Flag,
+                Date = DateTime.Now.Date
+            });
+        if (response.Flag)
+        {
+            await GetCategories();
+            await ToastComponent!.ShowSuccessToast("Info", response.Message);
+            CategoryModel = new();
+            CloseModal();
+        }
+        else
+        {
+            await ToastComponent!.ShowErrorToast("Info", response.Message);
+        }
+        Loading = false;
+    }
+    public void Dispose() => homeGenericState.StateChanged -= StateButtonClicked;
+
+}

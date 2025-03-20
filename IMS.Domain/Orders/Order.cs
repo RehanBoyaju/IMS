@@ -12,7 +12,7 @@ namespace IMS.Domain.Orders
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
         public DateTime DateOrdered { get; set; }
-        public DateTime DeliveringDate { get; set; }
+        public DateTime? DeliveringDate { get; set; }
         public Guid ProductId { get; set; }
         public string ClientId { get; set; }
         public int Quantity { get; set; }

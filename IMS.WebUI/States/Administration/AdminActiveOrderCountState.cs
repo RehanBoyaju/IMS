@@ -13,14 +13,17 @@ namespace IMS.WebUI.States.Administration
         public event Action? StateChanged;
         public async Task GetActiveOrdersCount()
         {
-            using var scope = serviceProvider.CreateScope();
-            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-            var response = (await mediator.Send(new GetGenericOrdersCountQuery(null, true)));
 
-            ProcessingCount = response.Processing;
-            DeliveringCount = response.Delivering;
-            DeliveredCount = response.Delivered;
-            CanceledCount = response.Canceled;
+            using var scope = serviceProvider.CreateScope();
+                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                var response = (await mediator.Send(new GetGenericOrdersCountQuery(null, true)));
+
+                ProcessingCount = response.Processing;
+                DeliveringCount = response.Delivering;
+                DeliveredCount = response.Delivered;
+                CanceledCount = response.Canceled;
+            
+            
 
             StateChanged?.Invoke();
         }

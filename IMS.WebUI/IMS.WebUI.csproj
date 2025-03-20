@@ -57,10 +57,4 @@
 
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Components\Products\Category\" />
-    <Folder Include="Components\Products\Location\" />
-    <Folder Include="Components\Products\Orders\" />
-  </ItemGroup>
-
 </Project>

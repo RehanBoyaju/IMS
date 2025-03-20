@@ -18,14 +18,16 @@ namespace IMS.Infrastructure.EntityFramework.Repository.Orders.Handlers
         {
             try
             {
-                using var dbContext = contextFactory.CreateDbContext();
-                var order = await dbContext.Orders.Where(o => o.Id == request.OrderId).FirstOrDefaultAsync(cancellationToken: cancellationToken);
-                if (order == null)
-                {
-                    return new ServiceResponse(false, "Order not found");
+                using(var dbContext = contextFactory.CreateDbContext()){
+                    var order = await dbContext.Orders.Where(o => o.Id == request.OrderId).FirstOrDefaultAsync(cancellationToken: cancellationToken);
+                    if (order == null)
+                    {
+                        return new ServiceResponse(false, "Order not found");
+                    }
+                    order.OrderState = OrderState.Canceled;
+                    await dbContext.SaveChangesAsync(cancellationToken);
                 }
-                order.OrderState = OrderState.Canceled;
-                await dbContext.SaveChangesAsync(cancellationToken);
+                
                 return new ServiceResponse(true, "Order canceled succesfully");
             }
             catch (Exception ex)

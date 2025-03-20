@@ -12,9 +12,8 @@ namespace IMS.Application.DTO.Response.Orders
         public Guid Id { get; set; }
         public string State { get; set; }
         public string SerialNumber { get; set; }
-        public string ProductName { get; set; }
         public DateTime OrderedDate { get; set; }
-        public DateTime DeliveringDate { get; set; }
+        public DateTime? DeliveringDate { get; set; }
         public decimal Price { get; set; }
         public decimal TotalAmount => Price * Quantity;
         public string ProductImage { get; set; }

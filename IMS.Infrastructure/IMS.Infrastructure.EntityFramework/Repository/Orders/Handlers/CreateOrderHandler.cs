@@ -30,7 +30,10 @@ namespace IMS.Infrastructure.EntityFramework.Repository.Orders.Handlers
                 data.TotalAmount = product.Price * data.Quantity;
                 data.OrderState = OrderState.Processing;
                 data.Price = product.Price;
+                data.DateOrdered = DateTime.Now;
+                data.DeliveringDate = null;
                 dbContext.Orders.Add(data);
+
                 await dbContext.SaveChangesAsync(cancellationToken);
                 return new ServiceResponse(true, "Order placed successfully");
             }

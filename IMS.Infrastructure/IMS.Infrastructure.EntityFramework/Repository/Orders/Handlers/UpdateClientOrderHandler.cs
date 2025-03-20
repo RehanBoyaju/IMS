@@ -19,16 +19,18 @@ namespace IMS.Infrastructure.EntityFramework.Repository.Orders.Handlers
         {
             try
             {
-                using var dbContext = contextFactory.CreateDbContext();
-                var data = await dbContext.Orders.Where(o => o.Id == request.OrderModel.OrderId).FirstOrDefaultAsync(cancellationToken);
-                if (data == null)
-                {
-                    return new ServiceResponse(false, "Order not found");
-                }
-                data.OrderState = request.OrderModel.OrderState;
-                data.DeliveringDate = request.OrderModel.DeliveringDate;
+                using(var dbContext = contextFactory.CreateDbContext()){
+                    var data = await dbContext.Orders.Where(o => o.Id == request.OrderModel.OrderId).FirstOrDefaultAsync(cancellationToken);
+                    if (data == null)
+                    {
+                        return new ServiceResponse(false, "Order not found");
+                    }
+                    data.OrderState = request.OrderModel.OrderState;
+                    data.DeliveringDate = request.OrderModel.DeliveringDate;
 
-                await dbContext.SaveChangesAsync(cancellationToken);
+                    await dbContext.SaveChangesAsync(cancellationToken);
+                }
+              
 
                 return new ServiceResponse(true, "Order updated successfully");
             }
