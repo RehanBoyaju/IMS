@@ -1,0 +1,7 @@
+﻿.e-skeleton {
+    flex: 0 1 calc(33.33% - 10px); /* 3 per row with spacing */
+    max-width: 80px; /* Keeps the skeletons from stretching too much */
+    margin-bottom: 10px; /* Adds space between rows */
+    display: flex;
+    justify-content: center;
+}

@@ -33,7 +33,7 @@ builder.Services.AddScoped<AdminActiveOrderCountState>();
 builder.Services.AddScoped<GenericHomeHeaderState>();
 builder.Services.AddScoped<UserActiveOrderCountState>();
 builder.Services.AddVirtualizationService();
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NMaF1cXmhKYVFwWmFZfVtgcV9EZVZRRWYuP1ZhSXxWdkZiUH9bcnFVR2VcV0A=");
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["SyncfusionKey"]);
 builder.Services.AddNetcodeHubLocalStorageService();
 builder.Services.AddSyncfusionBlazor();
 builder.Services.AddMudServices();

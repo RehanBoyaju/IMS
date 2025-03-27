@@ -11,6 +11,7 @@
             StateName = stateName;
             IsAdmin = IsAdmin;
             StateChanged?.Invoke();
+            
         }
 
     }

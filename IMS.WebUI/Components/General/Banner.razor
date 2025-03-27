@@ -111,7 +111,7 @@
                         <div class="color-card">
                             <p class="mb-0 color-card-head">Last Month</p>
                             <h2 class="text-white">
-                                $ @ClientTotalAmountOfProductOrderedForLastMonth.ToString("#,##0.00");
+                                $@ClientTotalAmountOfProductOrderedForLastMonth.ToString("#,##0.00");
                             </h2>
                         </div>
                         <i class="card-icon-indicator mdi mdi-briefcase-outline bg-inverse-icon-primary"></i>
@@ -170,7 +170,7 @@
             User = (await AuthStateProvider.GetAuthenticationStateAsync()).User;
             if (User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.Role)!.Value.Equals("User", StringComparison.OrdinalIgnoreCase))
             {
-                string userId = User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.NameIdentifier)!.Value;
+                string userId = User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.NameIdentifier)!.Value;    
                 using var scope = serviceProvider.CreateScope();
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                 UserOrders = (await mediator.Send(new GetOrderByIdQuery(userId)));
