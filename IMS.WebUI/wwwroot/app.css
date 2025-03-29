@@ -16,7 +16,10 @@ html, body {
     flex-shrink: 0; /* Prevents shrinking */
 }
 
-
+.content-wrapper {
+    padding: 0px !important;
+    overflow-x: hidden !important;
+}
 a, .btn-link {
     color: #006bb7;
 }

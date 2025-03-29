@@ -2,193 +2,204 @@
 @using MediatR
 @page "/administration/products/orders/{OrderStateParam}"
 @rendermode InteractiveServer
- @implements IDisposable
-
+@implements IDisposable
+@attribute [Authorize(Policy = "AdministrationPolicy")]
 <PageTitle>Orders</PageTitle>
 
-<TwoSectionsTemplate>
-    <Col12Template>
-        <NetcodeHubBreadCrumb BreadCrumbs="BreadCrumbs" DeactivatedColor="@Color.Primary()" BackgroundColor="@BreadCrumbBackgroundColor.SecondarySubtle()" ActivatedColor="@Color.Dark()"></NetcodeHubBreadCrumb>
-        <div class="row bg-success py-2 mt-3" style="border-radius: 20px">
+@if(IsLoading)
+{
+    <b><i>Loading....</i></b>
+}
+else if (!PermanentOrders.Any())
+{
+    <div>No orders found</div>
+}
+else
+{
+    <TwoSectionsTemplate>
+        <Col12Template>
+            <NetcodeHubBreadCrumb BreadCrumbs="BreadCrumbs" DeactivatedColor="@Color.Primary()" BackgroundColor="@BreadCrumbBackgroundColor.SecondarySubtle()" ActivatedColor="@Color.Dark()"></NetcodeHubBreadCrumb>
+            <div class="row bg-success py-2 mt-3" style="border-radius: 20px">
 
-            <div class="col-lg-12 col-sm-12 col-md-12">
+                <div class="col-lg-12 col-sm-12 col-md-12">
 
-                <div class="card border-1 shadow-lg" style="border-radius: 20px">
-                    <div class="card-header text-center">
-                        <i class="mdi mdi-sync fs-2 float-start text-success"></i>
-                        <h4 class="text-success">Manage Product Orders</h4>
-                    </div>
-                    <div class="card-body border-1 border-success">
-                        <div class="mb-1">
-                            <input type="search" class="form-control float-end w-25 mb-1 p-2 border-success" placeholder="Search client, product, state,serial number" @onchange="SearchOrder" />
+                    <div class="card border-1 shadow-lg" style="border-radius: 20px">
+                        <div class="card-header text-center">
+                            <i class="mdi mdi-sync fs-2 float-start text-success"></i>
+                            <h4 class="text-success">Manage Product Orders</h4>
                         </div>
-                        <SfGrid DataSource="@PermanentOrders" AllowPaging="true" AllowSorting="true" AllowExcelExport="true" style="margin-top: 35px;" AllowGrouping="true" AllowPdfExport="true" Toolbar="Toolbaritems" AllowSelection="true" AllowResizing="true" @ref="DefaultGrid">
-                            <GridPageSettings PageSize="6"></GridPageSettings>
-                            <GridSelectionSettings Type="SelectionType. Single" Mode="SelectionMode. Both"></GridSelectionSettings>
-                            <GridEvents OnToolbarClick="ToolbarClickHandler" TValue="GetOrderResponseDTO" RowSelected="RowSelectHandler"></GridEvents>
-                            <GridColumns>
-                                <GridColumn HeaderText="Image" AllowFiltering=false>
-                                    <Template>
-                                        @{
-                                            var product = (context as GetOrderResponseDTO);
-                                        }
-                                        <div class="image">
-                                            <img src="@(product!.ProductImage)" alt="@product.ProductName" width="70" height="50" />
-                                        </div>
-                                    </Template>
-                                </GridColumn>
-                                <GridColumn Field=@nameof(GetOrderResponseDTO.ClientName) HeaderText="Client Name"></GridColumn>
-                                <GridColumn Field=@nameof(GetOrderResponseDTO. OrderedDate) HeaderText="Date Ordered" Format="d" Type="ColumnType. DateTime">
-                                </GridColumn>
-                                <GridColumn Field=@nameof(GetOrderResponseDTO. DeliveringDate) HeaderText="Delivering Date" Format="d" Type="ColumnType. DateTime"></GridColumn>
-                                <GridColumn Field=@nameof(GetOrderResponseDTO.ProductName) HeaderText="Product Name"></GridColumn>
-                                <GridColumn Field=@nameof(GetOrderResponseDTO. SerialNumber) HeaderText="Serial NO."></GridColumn>
-                                <GridColumn Field=@nameof(GetOrderResponseDTO. Quantity) HeaderText="Quantity" Type="ColumnType.Integer"></GridColumn>
-                                <GridColumn Field=@nameof(GetOrderResponseDTO. Price) HeaderText="Price" Format="C2" Type="ColumnType. Decimal"></GridColumn>
-                                <GridColumn Field=@nameof(GetOrderResponseDTO. TotalAmount) HeaderText="Total" Format="C2" Type="ColumnType.Decimal"></GridColumn>
-                                <GridColumn HeaderText="State">
-                                    <Template>
-                                        @{
-                                            var order = (context as GetOrderResponseDTO);
-                                            <div class="d-flex justify-content-between">
-
-                                                @if (order!.State.Equals(OrderState.Processing))
-                                                {
-                                                    <button type="button" class="btn btn-warning btn-sm border-0" style="cursor:default">@order!.State</button>
-                                                }
-                                                else if (order!.State.Equals(OrderState.Delivered))
-                                                {
-                                                    <button type="button" class="btn btn-success btn-sm border-0" style="cursor:default">@order!.State</button>
-                                                }
-                                                else if (order!.State.Equals(OrderState.Delivering))
-                                                {
-                                                    <button type="button" class="btn btn-primary btn-sm border-0" style="cursor: default">@order!.State</button>
-                                                }
-                                                else
-                                                {
-                                                    <button type="button" class="btn btn-danger btn-sm border-0" style="cursor:default">@order!.State</button>
-                                                }
+                        <div class="card-body border-1 border-success">
+                            <div class="mb-1">
+                                <input type="search" class="form-control float-end w-25 mb-1 p-2 border-success" placeholder="Search client, product, state,serial number" @onchange="SearchOrder" />
+                            </div>
+                            <SfGrid DataSource="@PermanentOrders" AllowPaging="true" AllowSorting="true" AllowExcelExport="true" style="margin-top: 35px;" AllowGrouping="true" AllowPdfExport="true" Toolbar="Toolbaritems" AllowSelection="true" AllowResizing="true" @ref="DefaultGrid">
+                                <GridPageSettings PageSize="6"></GridPageSettings>
+                                <GridSelectionSettings Type="SelectionType. Single" Mode="SelectionMode. Both"></GridSelectionSettings>
+                                <GridEvents OnToolbarClick="ToolbarClickHandler" TValue="GetOrderResponseDTO" RowSelected="RowSelectHandler"></GridEvents>
+                                <GridColumns>
+                                    <GridColumn HeaderText="Image" AllowFiltering=false>
+                                        <Template>
+                                            @{
+                                                var product = (context as GetOrderResponseDTO);
+                                            }
+                                            <div class="image">
+                                                <img src="@(product!.ProductImage)" alt="@product.ProductName" width="70" height="50" />
                                             </div>
-                                        }
-                                    </Template>
-                                </GridColumn>
-                            </GridColumns>
-                        </SfGrid>
+                                        </Template>
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(GetOrderResponseDTO.ClientName) HeaderText="Client Name"></GridColumn>
+                                    <GridColumn Field=@nameof(GetOrderResponseDTO. OrderedDate) HeaderText="Date Ordered" Format="d" Type="ColumnType. DateTime">
+                                    </GridColumn>
+                                    <GridColumn Field=@nameof(GetOrderResponseDTO. DeliveringDate) HeaderText="Delivering Date" Format="d" Type="ColumnType. DateTime"></GridColumn>
+                                    <GridColumn Field=@nameof(GetOrderResponseDTO.ProductName) HeaderText="Product Name"></GridColumn>
+                                    <GridColumn Field=@nameof(GetOrderResponseDTO. SerialNumber) HeaderText="Serial NO."></GridColumn>
+                                    <GridColumn Field=@nameof(GetOrderResponseDTO. Quantity) HeaderText="Quantity" Type="ColumnType.Integer"></GridColumn>
+                                    <GridColumn Field=@nameof(GetOrderResponseDTO. Price) HeaderText="Price" Format="C2" Type="ColumnType. Decimal"></GridColumn>
+                                    <GridColumn Field=@nameof(GetOrderResponseDTO. TotalAmount) HeaderText="Total" Format="C2" Type="ColumnType.Decimal"></GridColumn>
+                                    <GridColumn HeaderText="State">
+                                        <Template>
+                                            @{
+                                                var order = (context as GetOrderResponseDTO);
+                                                <div class="d-flex justify-content-between">
+
+                                                    @if (order!.State.Equals(OrderState.Processing))
+                                                    {
+                                                        <button type="button" class="btn btn-warning btn-sm border-0" style="cursor:default">@order!.State</button>
+                                                    }
+                                                    else if (order!.State.Equals(OrderState.Delivered))
+                                                    {
+                                                        <button type="button" class="btn btn-success btn-sm border-0" style="cursor:default">@order!.State</button>
+                                                    }
+                                                    else if (order!.State.Equals(OrderState.Delivering))
+                                                    {
+                                                        <button type="button" class="btn btn-primary btn-sm border-0" style="cursor: default">@order!.State</button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button type="button" class="btn btn-danger btn-sm border-0" style="cursor:default">@order!.State</button>
+                                                    }
+                                                </div>
+                                            }
+                                        </Template>
+                                    </GridColumn>
+                                </GridColumns>
+                            </SfGrid>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <NetcodeHubModal @bind-Open="IsOpen" BootstrapClass="border-success rounded p-2 ml-2" CustomStyle="@ModalCustomStyle">
-            <ContentTemplate>
-                @if (ShowUpdateOrderPage)
-                {
-                    <div class="card border-1 shadow-sm">
-                        <div class="card-header">
-                            <i class="mdi mdi-sync text-success fs-4 px-3 menu-icon text-start"></i>
-                            <span class="text-center text-success fw-bold">Update Order</span>
-                            <i class="mdi mdi-close text-success fw-bold float-end fs-4 cursorStyle" @onclick="CloseModal"></i>
-                        </div>
-                        <div class="card-body">
-                            <EditForm Model="UpdateOrderModel" OnValidSubmit="Save" Enhance>
-                                <DataAnnotationsValidator />
-                                <div class="form-group">
+            <NetcodeHubModal @bind-Open="IsOpen" BootstrapClass="border-success rounded p-2 ml-2" CustomStyle="@ModalCustomStyle">
+                <ContentTemplate>
+                    @if (ShowUpdateOrderPage)
+                    {
+                        <div class="card border-1 shadow-sm">
+                            <div class="card-header">
+                                <i class="mdi mdi-sync text-success fs-4 px-3 menu-icon text-start"></i>
+                                <span class="text-center text-success fw-bold">Update Order</span>
+                                <i class="mdi mdi-close text-success fw-bold float-end fs-4 cursorStyle" @onclick="CloseModal"></i>
+                            </div>
+                            <div class="card-body">
+                                <EditForm Model="UpdateOrderModel" OnValidSubmit="Save" Enhance>
+                                    <DataAnnotationsValidator />
+                                    <div class="form-group">
 
-                                    <label class="form-label">Select State</label>
+                                        <label class="form-label">Select State</label>
 
-                                    <select class="form-select mb-3 w-100" @onchange="OrderStateSelectionChanged">
+                                        <select class="form-select mb-3 w-100" @onchange="OrderStateSelectionChanged">
 
-                                        @if (OrderStates != null)
+                                            @if (OrderStates != null)
+                                            {
+
+                                                string state = OrderStates.FirstOrDefault(_ => _.Equals(UpdateOrderModel!.OrderState, StringComparison.OrdinalIgnoreCase))!;
+                                                @if (string.IsNullOrEmpty(state))
+                                                {
+
+                                                    <option value="@OrderState.Canceled">@OrderState.Canceled </option>
+
+                                                }
+
+                                                foreach (var item in OrderStates)
+
+                                                {
+
+                                                    if (!string.IsNullOrEmpty(state) && state.Equals(item) || item.Equals(OrderState.Canceled, StringComparison.OrdinalIgnoreCase))
+
+                                                    {
+
+                                                        <option selected value="@item">@item</option>
+                                                    }
+                                                    else
+
+                                                    {
+
+                                                        <option value="@item">@item</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        <label class="form-label">Select Delivery Date</label>
+                                        <InputDate @bind-Value="UpdateOrderModel!.DeliveringDate" class="form-control" Min="@DateTime.Today">></InputDate>
+
+                                    </div>
+                                    <div class="form-group mt-3">
+                                        @if (Loading)
                                         {
+                                            <GenericSpinnerButton ButtonClass="btn btn-danger" Text="@Text">
 
-                                            string state = OrderStates.FirstOrDefault(_ => _.Equals(UpdateOrderModel!.OrderState, StringComparison.OrdinalIgnoreCase))!;
-                                            @if (string.IsNullOrEmpty(state))
-                                            {
-
-                                                <option value="@OrderState.Canceled">@OrderState.Canceled </option>
-
-                                            }
-
-                                            foreach (var item in OrderStates)
-
-                                            {
-
-                                                if (!string.IsNullOrEmpty(state) && state.Equals(item) || item.Equals(OrderState.Canceled, StringComparison.OrdinalIgnoreCase))
-
-                                                {
-
-                                                    <option selected value="@item">@item</option>
-                                                }
-                                                else
-
-                                                {
-
-                                                    <option value="@item">@item</option>
-                                                }
-                                            }
+                                            </GenericSpinnerButton>
                                         }
-                                    </select>
-                                </div>
-                                <div class="form-group mt-3">
-                                    <label class="form-label">Select Delivery Date</label>
-                                    <InputDate @bind-Value="UpdateOrderModel!.DeliveringDate" class="form-control" Min="@DateTime.Today">></InputDate>
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-success float-end"><i class="mdi mdi-sync"></i>Update Order</button>
+                                        }
+                                    </div>
+                                    <div class="form-group mt-2">
+                                        @if (Errors != "")
+                                        {
+                                            @Errors
 
-                                </div>
-                                <div class="form-group mt-3">
-                                    @if (Loading)
-                                    {
-                                        <GenericSpinnerButton ButtonClass="btn btn-danger" Text="@Text">
-
-                                        </GenericSpinnerButton>
-                                    }
-                                    else
-                                    {
-                                        <button type="submit" class="btn btn-success float-end"><i class="mdi mdi-sync"></i>Update Order</button>
-                                    }
-                                </div>
-                                <div class="form-group mt-2">
-                                    @if (Errors != "")
-                                    {
-                                        @Errors
-
-                                    }
-                                    else
-                                    {
-                                        <ValidationSummary style="list-style:circle"></ValidationSummary>
-                                    }
-                                </div>
-                            </EditForm>
+                                        }
+                                        else
+                                        {
+                                            <ValidationSummary style="list-style:circle"></ValidationSummary>
+                                        }
+                                    </div>
+                                </EditForm>
+                            </div>
                         </div>
-                    </div>
-                }
-                @if (ShowOtherPage)
-                {
-                    <div class="card">
-                        <div class="card-header justify-content-between d-flex">
-                            <i class="d-flex @OtherModalHeaderIcon text-@CssClass fs-4 px-3 menu-icon text-start"></i>
-                            <span class="f-flex text-center text-@CssClass fw-bold px-3">@OtherModalTitle</span>
-                            <i class="d-flex mdi mdi-close text-@CssClass fw-bold float-end fs-4 cursorStyle" @onclick="CloseModal"></i>
+                    }
+                    @if (ShowOtherPage)
+                    {
+                        <div class="card">
+                            <div class="card-header justify-content-between d-flex">
+                                <i class="d-flex @OtherModalHeaderIcon text-@CssClass fs-4 px-3 menu-icon text-start"></i>
+                                <span class="f-flex text-center text-@CssClass fw-bold px-3">@OtherModalTitle</span>
+                                <i class="d-flex mdi mdi-close text-@CssClass fw-bold float-end fs-4 cursorStyle" @onclick="CloseModal"></i>
+                            </div>
+                            <div class="card-body">@OtherModalMessage</div>
+                            <div class="card-footer">
+                                @if (Loading)
+                                {
+                                    <GenericSpinnerButton ButtonClass="btn btn-danger" Text="@Text"></GenericSpinnerButton>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-@CssClass float-end" type="button" @onclick="OtherModalButtonClicked">
+                                        <i class="mdi mdi-radio"></i>
+                                        @OtherModalButtonText
+                                    </button>
+                                }
+                            </div>
                         </div>
-                        <div class="card-body">@OtherModalMessage</div>
-                        <div class="card-footer">
-                            @if (Loading)
-                            {
-                                <GenericSpinnerButton ButtonClass="btn btn-danger" Text="@Text"></GenericSpinnerButton>
-                            }
-                            else
-                            {
-                                <button class="btn btn-@CssClass float-end" type="button" @onclick="OtherModalButtonClicked">
-                                    <i class="mdi mdi-radio"></i>
-                                    @OtherModalButtonText
-                                </button>
-                            }
-                        </div>
-                    </div>
-                }
-            </ContentTemplate>
-        </NetcodeHubModal>
+                    }
+                </ContentTemplate>
+            </NetcodeHubModal>
 
-    </Col12Template>
-</TwoSectionsTemplate>
+        </Col12Template>
+    </TwoSectionsTemplate>
+}
 <NetcodeHubToast @ref="ToastComponent" Duration="@Duration" />
 
 
@@ -227,14 +238,24 @@
     [Parameter]
     public string? OrderStateParam { get; set; }
     private HubConnection? hubConnection;
+    private bool IsLoading = true;
     protected async override Task OnInitializedAsync()
     {
-        homeGenericState.StateChanged += StateButtonClicked;
-        Loading = true;
-        await GetUserIdentity();
-        await GetOrders();
-        LoadToolbarItems();
-        Loading = false;
+
+        try
+        {
+            IsLoading = true;
+            Loading = true;
+            await GetUserIdentity();
+            await GetOrders();
+            LoadToolbarItems();
+        }
+        finally
+        {
+            IsLoading = false;
+            Loading = false;
+            StateHasChanged();
+        }
 
         hubConnection = hubConnectionService.GetHubConnection();
         hubConnection.On<string>("Notify", async (clientId) =>
@@ -255,30 +276,26 @@
             await adminState.GetActiveOrdersCount();
         });
     }
-    void StateButtonClicked()
-    {
-        OrderStateParam = string.Empty;
-        var updateUrlTask = Task.Run(async () => await JS.InvokeVoidAsync("updateUrl", "administration/products/orders"));
+    // void StateButtonClicked()
+    // {
+    //     OrderStateParam = string.Empty;
+    //     var updateUrlTask = Task.Run(async () => await JS.InvokeVoidAsync("updateUrl", "administration/products/orders"));
 
-        StateGeneralMethod();
+    //     StateGeneralMethod();
 
-    }
-    protected override void OnParametersSet()
+    // }
+
+    void StateGeneralMethod()
     {
-        if (string.IsNullOrEmpty(OrderStateParam) || !homeGenericState.IsAdmin)
+        string state = OrderStateParam!;
+        if ( !string.IsNullOrEmpty(state))
         {
-            return;
+            PermanentOrders = TemporalOrders.Where(_ => _.State.Equals(state, StringComparison.OrdinalIgnoreCase)).ToList();
         }
         else
         {
-            StateGeneralMethod();
+            PermanentOrders = TemporalOrders.ToList();
         }
-    }
-    void StateGeneralMethod()
-    {
-        string state = homeGenericState.StateName;
-        bool isAdmin = homeGenericState.IsAdmin;
-        PermanentOrders = TemporalOrders.Where(_ => _.State.Equals(state, StringComparison.OrdinalIgnoreCase)).ToList();
         StateHasChanged();
     }
     async Task ToolbarClickHandler(ClickEventArgs e)
@@ -354,9 +371,9 @@
         Loading = true;
         using var scope = serviceProvider.CreateScope();
 
-            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-            var response = await mediator.Send(new CancelOrderCommand(SelectedOrder.Id));
-            await accountService.SaveActivityAsync(new ActivityTrackerRequestDTO()
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var response = await mediator.Send(new CancelOrderCommand(SelectedOrder.Id));
+        await accountService.SaveActivityAsync(new ActivityTrackerRequestDTO()
                 {
                     UserId = User!.Claims.FirstOrDefault(u => u.Type == ClaimTypes.NameIdentifier)!.Value.ToString(),
                     Title = "Cancel order method called",
@@ -364,21 +381,21 @@
                     OperationState = response.Flag,
                     Date = DateTime.Now.Date
                 });
-            if (response.Flag)
-            {
-                await hubConnection!.SendAsync("Notification", "dummyId");
-                await adminState.GetActiveOrdersCount();
-                CloseModal();
-                await GetOrders();
-                await ToastComponent!.ShowSuccessToast("Info", response.Message);
+        if (response.Flag)
+        {
+            await hubConnection!.SendAsync("Notification", "dummyId");
+            await adminState.GetActiveOrdersCount();
+            CloseModal();
+            await GetOrders();
+            await ToastComponent!.ShowSuccessToast("Info", response.Message);
 
-            }
-            else
-            {
-                await ToastComponent!.ShowErrorToast("Info", response.Message);
-            }
-            Loading = false;
-        
+        }
+        else
+        {
+            await ToastComponent!.ShowErrorToast("Info", response.Message);
+        }
+        Loading = false;
+
 
     }
     private async Task<bool> CheckIfRowSelected()
@@ -524,8 +541,7 @@
 
         TemporalOrders = await mediator.Send(new GetAllOrderQuery());
 
-        PermanentOrders = TemporalOrders;
-
+        StateGeneralMethod();
 
 
     }
@@ -535,7 +551,10 @@
     {
         UpdateOrderModel.OrderState = e.Value!.ToString();
     }
-    public void Dispose() => homeGenericState.StateChanged -= StateButtonClicked;
+    public void Dispose()
+    {
+        
+    }
 }
 
 

@@ -3,9 +3,9 @@
 @attribute [Authorize(Policy = "AdministrationPolicy")]
 
 
-<div class="page-header flex-wrap pt-5" >
+<div class="page-header flex-wrap mt-3" >
     <h3 class="mb-0">
-        Hi,Welcome Back! <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block"> Your system analytics dashbaord:</span>
+        Hi,Welcome Back! <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block"> Your system analytics dashboard:</span>
     </h3>
     <div class="d-flex">
         <button type="button" class="btn btn-sm btn-outline-warning btn-icon-text border-1 position-relative ml-5" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Processing,true))">
@@ -39,22 +39,39 @@
             <i class="mdi mdi-sync-off btn-icon-prepend"></i>
             Canceled
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                @adminState.DeliveringCount
+                @adminState.CanceledCount
                 <span class="visually-hidden">unread messages</span>
             </span>
         </button>
     </div>
 </div>
 @code {
- //   public int Count{ get; set; }
+    //   public int Count{ get; set; }
     protected override async Task OnInitializedAsync()
     {
         adminState.StateChanged += StateHasChanged;
+        homeGenericState.StateChanged += StateButtonClicked;
         await adminState.GetActiveOrdersCount();
+
+    }
+    void StateButtonClicked()
+    {
+        bool isAdmin = homeGenericState.IsAdmin;
+        if (isAdmin)
+        {
+            var OrderStateParam = homeGenericState.StateName;
+            NavigationManager.NavigateTo($"administration/products/orders/{OrderStateParam}");
+        }
+        else
+        {
+            NavigationManager.NavigateTo("Account/Access-Denied");
+        }
 
     }
     public void Dispose()
     {
         adminState.StateChanged -= StateHasChanged;
+        homeGenericState.StateChanged -= StateButtonClicked;
+
     }
 }

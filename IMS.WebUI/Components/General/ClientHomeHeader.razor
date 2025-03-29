@@ -1,15 +1,15 @@
 ﻿@rendermode InteractiveServer
 @implements IDisposable
-<div class="page-header flex-wrap" style="margin-top:0rem">
+<div class="page-header flex-wrap mt-3">
     <h3 class="mb-0">
-        Hi,Welcome Back! <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block"> Your system analytics dashbaord:</span>
+        Hi,Welcome Back! <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block"> Your system analytics dashboard:</span>
     </h3>
     <div class="d-flex">
         <button type="button" class="btn btn-sm btn-outline-warning btn-icon-text border-1 position-relative ml-5" @onclick="(()=> homeGenericState.GetProcessingOrderButtonClicked(OrderState.Processing,false))">
             <i class="mdi mdi-sync btn-icon-prepend"></i>
             Processing
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
-                @adminState.ProcessingCount
+                @userState.ProcessingCount
                 <span class="visually-hidden">unread messages</span>
             </span>
         </button>
@@ -18,7 +18,7 @@
             <i class="mdi mdi-swim btn-icon-prepend"></i>
             Delivering
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
-                @adminState.DeliveringCount
+                @userState.DeliveringCount
                 <span class="visually-hidden">unread messages</span>
             </span>
         </button>
@@ -27,7 +27,7 @@
             <i class="mdi mdi-check-all btn-icon-prepend"></i>
             Delivered
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-success">
-                @adminState.DeliveredCount
+                @userState.DeliveredCount
                 <span class="visually-hidden">unread messages</span>
             </span>
         </button>
@@ -36,7 +36,7 @@
             <i class="mdi mdi-sync-off btn-icon-prepend"></i>
             Canceled
             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                @adminState.DeliveringCount
+                @userState.CanceledCount
                 <span class="visually-hidden">unread messages</span>
             </span>
         </button>
@@ -47,6 +47,8 @@
     protected override async Task OnInitializedAsync()
     {
         userState.StateChanged += StateHasChanged;
+        homeGenericState.StateChanged += StateButtonClicked;
+
         try
         {
             string userId = (await AuthStateProvider.GetAuthenticationStateAsync()).User.Claims.FirstOrDefault(_ => _.Type == ClaimTypes.NameIdentifier)!.Value;
@@ -55,8 +57,17 @@
         catch{}
 
     }
+    void StateButtonClicked()
+    {
+        bool isAdmin = homeGenericState.IsAdmin;
+        var OrderStateParam = homeGenericState.StateName;
+        NavigationManager.NavigateTo($"products/orders/{OrderStateParam}");
+
+    }
     public void Dispose()
     {
         userState.StateChanged -= StateHasChanged;
+        homeGenericState.StateChanged -= StateButtonClicked;
+        
     }
 }

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace IMS.WebUI.States.Administration
 {
-    public class AdminActiveOrderCountState(IServiceProvider serviceProvider)
+    public class AdminActiveOrderCountState(IServiceScopeFactory serviceProvider)
     {
         public int ProcessingCount { get; set; }
         public int DeliveringCount { get; set; }

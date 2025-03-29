@@ -12,6 +12,8 @@ using NetcodeHub.Packages.Extensions.LocalStorage;
 using Syncfusion.Blazor;
 using MudBlazor.Services;
 using NetcodeHub.Packages.Components.DataGrid;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container. 

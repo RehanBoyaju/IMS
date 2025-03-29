@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace IMS.WebUI.States.User
 {
-    public class UserActiveOrderCountState(IServiceProvider serviceProvider)
+    public class UserActiveOrderCountState(IServiceScopeFactory serviceProvider)
     {
         public int ProcessingCount { get; set; }
         public int DeliveringCount { get; set; }
@@ -16,7 +16,7 @@ namespace IMS.WebUI.States.User
         public async Task GetActiveOrdersCount(string userId)
         {
             using var scope = serviceProvider.CreateScope();
-            var mediator = serviceProvider.GetRequiredService<IMediator>(); 
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>(); 
             var response = await mediator.Send(new GetGenericOrdersCountQuery(userId,false));
             ProcessingCount = response.Processing;
             DeliveringCount = response.Delivering;

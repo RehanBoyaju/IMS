@@ -1,8 +1,11 @@
-﻿using IMS.Application.DTO.Response;
+﻿using Azure.Core;
+using IMS.Application.DTO.Response;
 using IMS.Application.Extension;
 using IMS.Application.Service.Orders.Commands;
 using IMS.Domain.Orders;
+using IMS.Domain.Products;
 using IMS.Infrastructure.EntityFramework.Data;
+using IMS.Infrastructure.EntityFramework.Repository.Products.Handlers;
 using Mapster;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IMS.Infrastructure.EntityFramework.Repository.Orders.Handlers
@@ -22,10 +26,14 @@ namespace IMS.Infrastructure.EntityFramework.Repository.Orders.Handlers
             {
                 using var dbContext = contextFactory.CreateDbContext();
                 var product = await dbContext.Products.FirstOrDefaultAsync(o => o.Name == request.OrderModel.ProductName, cancellationToken: cancellationToken);
-                if(product == null)
+                if (product == null)
                 {
                     return new ServiceResponse(false, "Product not found");
                 }
+                product.Quantity = product.Quantity - request.OrderModel.Quantity;
+                await dbContext.SaveChangesAsync(cancellationToken);
+
+              
                 var data = request.OrderModel.Adapt<Order>();
                 data.TotalAmount = product.Price * data.Quantity;
                 data.OrderState = OrderState.Processing;
@@ -35,6 +43,7 @@ namespace IMS.Infrastructure.EntityFramework.Repository.Orders.Handlers
                 dbContext.Orders.Add(data);
 
                 await dbContext.SaveChangesAsync(cancellationToken);
+
                 return new ServiceResponse(true, "Order placed successfully");
             }
             catch(Exception ex)
@@ -42,6 +51,7 @@ namespace IMS.Infrastructure.EntityFramework.Repository.Orders.Handlers
                 return new ServiceResponse(false, ex.Message);
             }
         }
+        
         
     }
 }
