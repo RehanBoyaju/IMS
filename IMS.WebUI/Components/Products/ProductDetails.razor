@@ -15,7 +15,7 @@ else
 {
     <ThreeSectionsTemplate>
         <Col9Template>
-            <NetcodeHubBreadCrumb BreadCrumbs="BreadCrumbs" BackgroundColor="@BreadCrumbBackgroundColor.Secondary()" ActivatedColor="@Color.Dark()"></NetcodeHubBreadCrumb>
+            <NetcodeHubBreadCrumb BreadCrumbs="BreadCrumbs" BackgroundColor="@BreadCrumbBackgroundColor.SecondarySubtle()" ActivatedColor="@Color.Dark()"></NetcodeHubBreadCrumb>
             @if (Product.Id != Guid.Empty)
             {
                 <div class="row mt-3">
@@ -51,7 +51,9 @@ else
                                                     @Product.Description
                                                 </h2>
                                             </div>
+
                                             <i class="card-icon-indicator mdi mdi-information bg-inverse-icon-primary"></i>
+
                                         </div>
                                     </div>
                                 </div>
@@ -102,13 +104,13 @@ else
                     </div>
                 </div>
                 <div class="col-xl-12 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
-                    <div class="card bg-danger">
+                    <div class="card bg-secondary-subtle">
                         <div class="card-body px-3 py-4">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div class="color-card">
                                     @Product.SerialNumber
                                 </div>
-                                <i class="card-icon-indicator mdi mdi-numeric-9-plus-box-multiple-outline bg-inverse-icon-danger"></i>
+                                <i class="card-icon-indicator mdi mdi-numeric-9-plus-box-multiple-outline bg-inverse-icon-secondary"></i>
                             </div>
                         </div>
                     </div>

@@ -454,7 +454,6 @@
     async Task ConfirmDelete()
     {
         Loading = true;
-        await Task.Delay(3000);
         using var scope = serviceProvider.CreateScope();
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
         var response = await mediator.Send(new DeleteProductCommand(SelectedProduct.Id));

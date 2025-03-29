@@ -30,13 +30,7 @@ namespace IMS.Infrastructure.EntityFramework.Repository.Orders.Handlers
                 order.OrderState = OrderState.Canceled;
 
 
-                //var product = await dbContext.Products.FirstOrDefaultAsync(c => c.Id.Equals(order.ProductId), cancellationToken: cancellationToken);
-                //if (product == null)
-                //{
-                //    return new ServiceResponse(false, "Product not found in order");
-                //}
-
-                //product.Quantity += order.Quantity;
+               
 
 
                 await dbContext.SaveChangesAsync(cancellationToken);

@@ -191,6 +191,34 @@ else
                                         @OtherModalButtonText
                                     </button>
                                 }
+                               
+                            </div>
+                        </div>
+                    }
+                    @if (ShowConfirmationPage)
+                    {
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <i class="d-flex mdi mdi-delete-sweep text-danger fs-4 px-3 menu-icon text-start"></i>
+                                <span class="d-flex text-center fw-bold">Confirm Order Deletion</span>
+                                <i class="d-flex mdi mdi-close text-danger fw-bold float-end fs-4 cursorStyle" @onclick="CloseModal"></i>
+                            </div>
+                            <div class="card-body">
+                                Are you sure you want to delete this Order?
+                            </div>
+                            <div class="card-footer">
+                                @if (Loading)
+                                {
+                                    <GenericSpinnerButton Text="Deleting.." ButtonClass="btn btn-danger">
+                                    </GenericSpinnerButton>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-danger float-end" type="button" @onclick="ConfirmDelete">
+                                        <i class="mdi mdi-delete"></i>
+                                        Confirm
+                                    </button>
+                                }
                             </div>
                         </div>
                     }
@@ -230,6 +258,9 @@ else
     public bool Loading { get; set; } = false;
     public int Duration { get; set; } = 3000;
     public bool IsOpen { get; set; }
+    public bool CanDelete = false;
+    private bool ShowConfirmationPage;
+
 
     private IEnumerable<GetOrderResponseDTO> TemporalOrders { get; set; } = [];
     private IEnumerable<GetOrderResponseDTO> PermanentOrders { get; set; } = [];
@@ -344,6 +375,16 @@ else
             }
 
         }
+        else if (e.Item.Text.ToLower() == "delete")
+        {
+            if (await CheckIfRowSelected())
+            {
+                ResetModalDisplay();
+                ModalCustomStyle = "position: relative; left:40vw;min-width:280px;top:45vh";
+                ShowConfirmationPage = true;
+                OpenModal();
+            }
+        }
 
     }
 
@@ -451,11 +492,16 @@ else
         OtherModalIcon = string.Empty;
 
         OtherModalMessage = string.Empty;
+        
+        ShowConfirmationPage = false;
     }
 
     void LoadToolbarItems()
     {
-
+        if (CanDelete)
+        {
+            Toolbaritems.Add(new ItemModel() { Text = "Delete", TooltipText = "Delete Product", PrefixIcon = "e-trash" });
+        }
         Toolbaritems.Add(new ItemModel() { Text = "Cancel Order", TooltipText = "Cancel Order", PrefixIcon = "e-close" });
 
         Toolbaritems.Add(new ItemModel() { Text = "Update Order", TooltipText = "Update Order", PrefixIcon = "e-update" });
@@ -471,6 +517,8 @@ else
         try
         {
             User = (await AuthStateProvider.GetAuthenticationStateAsync()).User;
+            CanDelete = customAuthorizationService.CustomClaimChecker(User, DefaultClaims.Delete);
+
         }
         catch { }
     }
@@ -550,6 +598,36 @@ else
     void OrderStateSelectionChanged(Microsoft.AspNetCore.Components.ChangeEventArgs e)
     {
         UpdateOrderModel.OrderState = e.Value!.ToString();
+    }
+    async Task ConfirmDelete()
+    {
+        Loading = true;
+        using var scope = serviceProvider.CreateScope();
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var response = await mediator.Send(new DeleteOrderCommand(SelectedOrder.Id));
+        await accountService.SaveActivityAsync(new ActivityTrackerRequestDTO()
+            {
+                UserId = User!.Claims.FirstOrDefault(u => u.Type == ClaimTypes.NameIdentifier)!.Value.ToString(),
+                Title = "Delete Order Method called",
+                Description = response.Message,
+                OperationState = response.Flag,
+                Date = DateTime.Now.Date
+            });
+
+        if (response.Flag)
+        {
+            await GetOrders();
+            PermanentOrders= TemporalOrders;
+            await ToastComponent!.ShowSuccessToast("Info", response.Message);
+            SelectedOrder= new();
+            CloseModal();
+
+        }
+        else
+        {
+            await ToastComponent!.ShowErrorToast("Alert", response.Message);
+        }
+        Loading = false;
     }
     public void Dispose()
     {
